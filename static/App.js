@@ -147,7 +147,7 @@ var IssueAdd = function (_React$Component2) {
 }(React.Component);
 
 var IssueRow = function IssueRow(props) {
-    React.createElement(
+    return React.createElement(
         'tr',
         null,
         React.createElement(
@@ -212,18 +212,48 @@ var IssueList = function (_React$Component3) {
         value: function loadData() {
             var _this4 = this;
 
-            setTimeout(function () {
-                _this4.setState({ issues: issues });
-            }, 500);
+            fetch('/api/issues').then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                console.log("Total count of records: ", data._metadata.total_count);
+
+                data.records.forEach(function (issue) {
+                    issue.created = new Date(issue.created);
+
+                    if (issue.completionDate) {
+                        issue.completionDate = new Date(issue.completionDate);
+                    }
+                });
+
+                _this4.setState({ issues: data.records });
+            }).catch(function (err) {
+                console.log(err);
+            });
         }
     }, {
         key: 'createIssue',
         value: function createIssue(newIssue) {
-            var newIssues = this.state.issues.slice();
+            var _this5 = this;
 
-            newIssue.id = this.state.issues.length + 1;
-            newIssues.push(newIssue);
-            this.setState({ issues: newIssues });
+            fetch('/api/issues', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newIssue)
+            }).then(function (response) {
+                return response.json();
+            }).then(function (updatedIssue) {
+                updatedIssue.created = new Date(updatedIssue.created);
+
+                if (updatedIssue.completionDate) {
+                    updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+                }
+
+                var newIssues = _this5.state.issues.concat(updatedIssue);
+
+                _this5.setState({ issues: issues });
+            }).catch(function (err) {
+                alert("Error in sending data to server: " + err.message);
+            });
         }
     }, {
         key: 'render',

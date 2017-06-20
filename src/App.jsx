@@ -70,7 +70,7 @@ class IssueAdd extends React.Component {
     }
 }
 
-const IssueRow = (props) => {
+const IssueRow = (props) => (
     <tr>
         <td>{props.issue.id}</td>
         <td>{props.issue.status}</td>
@@ -83,7 +83,7 @@ const IssueRow = (props) => {
         </td>
         <td>{props.issue.title}</td>
     </tr>
-}
+);
 
 class IssueList extends React.Component {
     constructor() {
@@ -98,17 +98,45 @@ class IssueList extends React.Component {
     }
 
     loadData() {
-        setTimeout(() => {
-            this.setState({issues: issues});
-        }, 500);
+        fetch('/api/issues').then(response =>
+            response.json()
+        ).then(data => {
+            console.log("Total count of records: ", data._metadata.total_count);
+
+            data.records.forEach(issue => {
+                issue.created = new Date(issue.created);
+
+                if (issue.completionDate) {
+                    issue.completionDate = new Date(issue.completionDate);
+                }
+            });
+
+            this.setState({issues: data.records});
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     createIssue(newIssue) {
-        const newIssues = this.state.issues.slice();
+        fetch('/api/issues', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newIssue),
+        }).then(response =>
+            response.json()
+        ).then(updatedIssue => {
+            updatedIssue.created = new Date(updatedIssue.created);
 
-        newIssue.id = this.state.issues.length + 1;
-        newIssues.push(newIssue);
-        this.setState({issues: newIssues});
+            if (updatedIssue.completionDate) {
+                updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+            }
+
+            const newIssues = this.state.issues.concat(updatedIssue);
+
+            this.setState({issues: issues});
+        }).catch(err => {
+            alert("Error in sending data to server: " + err.message);
+        });
     }
 
     render() {
