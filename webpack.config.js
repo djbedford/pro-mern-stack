@@ -1,3 +1,4 @@
+const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
@@ -6,7 +7,7 @@ module.exports = {
         vendor: ['react', 'react-dom', 'whatwg-fetch'],
     },
     output: {
-        path: '/static',
+        path: path.resolve(__dirname, 'static'),
         filename: 'app.bundle.js'
     },
     plugins: [
