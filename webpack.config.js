@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: {
     app: ['./src/App.jsx'],
-    vendor: ['react', 'react-dom', 'whatwg-fetch'],
+    vendor: ['react', 'react-dom', 'whatwg-fetch', 'react-router'],
   },
   output: {
     path: path.resolve(__dirname, 'static'),
@@ -35,6 +35,7 @@ module.exports = {
         target: 'http://localhost:3000',
       },
     },
+    historyApiFallback: true,
   },
   devtool: 'source-map',
 };
