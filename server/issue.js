@@ -25,7 +25,7 @@ function cleanupIssue(issue) {
     }
   });
 
-  return cleanupIssue;
+  return cleanedUpIssue;
 }
 
 function validateIssue(issue) {
