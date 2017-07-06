@@ -7,6 +7,7 @@ module.exports = {
     vendor: [
       'react', 'react-dom', 'react-bootstrap',
       'whatwg-fetch', 'react-router', 'babel-polyfill',
+      'react-router-bootstrap',
     ],
   },
   output: {
