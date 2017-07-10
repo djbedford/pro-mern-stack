@@ -41,7 +41,7 @@ const Header = () => (
     </Nav>
     <Nav pullRight>
       <NavItem><Glyphicon glyph="plus" /> Create Issue</NavItem>
-      <NavDropdown id="user-dropdown" title={<Glyphicon glyph="optional-horizontal" />} noCaret>
+      <NavDropdown id="user-dropdown" title={<Glyphicon glyph="option-horizontal" />} noCaret>
         <MenuItem>Logout</MenuItem>
       </NavDropdown>
     </Nav>
