@@ -2,7 +2,7 @@ import React from 'react';
 import 'whatwg-fetch';
 import { Link } from 'react-router';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
-import IssueAdd from './IssueAdd.jsx';
+
 import IssueFilter from './IssueFilter.jsx';
 import Toast from './Toast.jsx';
 
@@ -16,7 +16,6 @@ export default class IssueList extends React.Component {
       toastType: 'success',
     };
 
-    this.createIssue = this.createIssue.bind(this);
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
     this.showError = this.showError.bind(this);
@@ -89,34 +88,6 @@ export default class IssueList extends React.Component {
     });
   }
 
-  createIssue(newIssue) {
-    fetch('/api/issues', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newIssue),
-    }).then((response) => {
-      if (response.ok) {
-        response.json().then((updatedIssue) => {
-          updatedIssue.created = new Date(updatedIssue.created);
-
-          if (updatedIssue.completionDate) {
-            updatedIssue.completionDate = new Date(updatedIssue.completionDate);
-          }
-
-          const newIssues = this.state.issues.concat(updatedIssue);
-
-          this.setState({ issues: newIssues });
-        });
-      } else {
-        response.json().then((err) => {
-          this.showError(`Failed to add issue: ${err.message}`);
-        });
-      }
-    }).catch((err) => {
-      this.showError(`Error in sending data to server: ${err.message}`);
-    });
-  }
-
   render() {
     return (
       <div>
@@ -127,7 +98,6 @@ export default class IssueList extends React.Component {
           />
         </Panel>
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
-        <IssueAdd createIssue={this.createIssue} />
         <Toast
           showing={this.state.toastVisible}
           message={this.state.toastMessage}
