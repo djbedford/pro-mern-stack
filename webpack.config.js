@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    app: ['./src/App.jsx'],
+    app: ['./client/Client.jsx'],
     vendor: [
       'react', 'react-dom', 'react-bootstrap',
       'whatwg-fetch', 'react-router', 'babel-polyfill',
@@ -35,7 +35,7 @@ module.exports = {
     port: 8000,
     contentBase: 'static',
     proxy: {
-      '/api/*': {
+      '**': {
         target: 'http://localhost:3000',
       },
     },

@@ -3,8 +3,9 @@ import bodyParser from 'body-parser';
 import { MongoClient, ObjectId } from 'mongodb';
 import 'babel-polyfill';
 import SourceMapSupport from 'source-map-support';
-import path from 'path';
+
 import Issue from './issue';
+import renderedPageRouter from './renderedPageRouter.jsx';
 
 SourceMapSupport.install();
 
@@ -170,9 +171,7 @@ app.delete('/api/issues/:id', (req, res) => {
   });
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve('static/index.html'));
-});
+app.use('/', renderedPageRouter);
 
 let db;
 
