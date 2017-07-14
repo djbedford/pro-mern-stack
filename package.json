@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -w dist dist/server.js",
+    "start": "node dist/server.bundle.js",
     "compile-server": "webpack --config webpack.server-config.js",
     "watch-server": "webpack --config webpack.server-config.js --watch",
     "start-hook": "nodemon -e js,jsx -w server,src server/start_hook.js",
     "compile": "webpack",
     "watch": "webpack-dev-server --hot --inline",
+    "dev-all": "npm run watch & npm run watch-server & npm start",
     "dev-all-hook": "npm run watch & npm run start-hook",
     "lint": "eslint --ext js,jsx src server webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +21,7 @@
     "babel-polyfill": "^6.23.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "isomorphic-fetch": "^2.2.1",
     "mongodb": "^2.2.29",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
@@ -45,7 +47,6 @@
     "webpack": "^3.0.0",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-dev-server": "^2.5.0",
-    "webpack-hot-middleware": "^2.18.0",
-    "whatwg-fetch": "^2.0.3"
+    "webpack-hot-middleware": "^2.18.0"
   }
 }

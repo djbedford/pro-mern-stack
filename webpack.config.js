@@ -6,7 +6,7 @@ module.exports = {
     app: ['./client/Client.jsx'],
     vendor: [
       'react', 'react-dom', 'react-bootstrap',
-      'whatwg-fetch', 'react-router', 'babel-polyfill',
+      'isomorphic-fetch', 'react-router', 'babel-polyfill',
       'react-router-bootstrap',
     ],
   },

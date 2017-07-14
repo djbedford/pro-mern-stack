@@ -1,13 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { MongoClient, ObjectId } from 'mongodb';
-import 'babel-polyfill';
-import SourceMapSupport from 'source-map-support';
+import { ObjectId } from 'mongodb';
 
 import Issue from './issue';
 import renderedPageRouter from './renderedPageRouter.jsx';
-
-SourceMapSupport.install();
 
 const app = express();
 app.use(express.static('static'));
@@ -175,12 +171,8 @@ app.use('/', renderedPageRouter);
 
 let db;
 
-MongoClient.connect('mongodb://localhost/issuetracker').then((connection) => {
-  db = connection;
+function setDb(newDb) {
+  db = newDb;
+}
 
-  app.listen(3000, () => {
-    console.log('App start on port 3000.');
-  });
-}).catch((error) => {
-  console.log('ERROR', error);
-});
+export { app, setDb };
