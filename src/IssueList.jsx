@@ -1,5 +1,5 @@
 import React from 'react';
-import 'whatwg-fetch';
+import 'isomorphic-fetch';
 import { Link } from 'react-router';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
 
@@ -7,10 +7,32 @@ import IssueFilter from './IssueFilter.jsx';
 import Toast from './Toast.jsx';
 
 export default class IssueList extends React.Component {
-  constructor() {
-    super();
+  static dataFetcher({ urlBase, location }) {
+    return fetch(`${urlBase || ''}/api/issues${location.search}`).then(response => {
+      if (!response.ok) {
+        return response.json().then(error => Promise.reject(error));
+      }
+
+      return response.json().then(data => ({ IssueList: data }));
+    });
+  }
+
+  constructor(props, context) {
+    super(props, context);
+
+    const issues = context.initialState.IssueList
+      ? context.initialState.IssueList.records : [];
+
+    issues.forEach(issue => {
+      issue.created = new Date(issue.created);
+
+      if (issue.completionDate) {
+        issue.completionDate = new Date(issue.completionDate);
+      }
+    });
+
     this.state = {
-      issues: [],
+      issues,
       toastVisible: false,
       toastMessage: '',
       toastType: 'success',
@@ -63,26 +85,19 @@ export default class IssueList extends React.Component {
   }
 
   loadData() {
-    fetch(`/api/issues${this.props.location.search}`).then((response) => {
-      if (response.ok) {
-        response.json().then((data) => {
-          console.log('Total count of records: ', data._metadata.total_count);
+    IssueList.dataFetcher({ location: this.props.location })
+    .then(data => {
+      const issues = data.IssueList.records;
 
-          data.records.forEach((issue) => {
-            issue.created = new Date(issue.created);
+      issues.forEach(issue => {
+        issue.created = new Date(issue.created);
 
-            if (issue.completionDate) {
-              issue.completionDate = new Date(issue.completionDate);
-            }
-          });
+        if (issue.completionDate) {
+          issue.completionDate = new Date(issue.completionDate);
+        }
+      });
 
-          this.setState({ issues: data.records });
-        });
-      } else {
-        response.json().then((error) => {
-          this.showError(`Failed to fetch issues: ${error.message}`);
-        });
-      }
+      this.setState({ issues });
     }).catch((err) => {
       this.showError('Error in fetching data from server:', err);
     });
@@ -160,6 +175,10 @@ const IssueRow = (props) => {
       </td>
     </tr>
   );
+};
+
+IssueList.contextTypes = {
+  initialState: React.PropTypes.object,
 };
 
 IssueList.propTypes = {
